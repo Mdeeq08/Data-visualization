@@ -8,19 +8,22 @@ const COLORS = ["#4285F4", "#FBBC05", "#34A853", "#EA4335"];
 
 import PropTypes from "prop-types";
 
-const StatCard = ({ icon: Icon, title, value, change, bgColor }) => (
+const StatCard = ({ imageSrc, icon: Icon, title, value, change, bgColor }) => (
     <div className={`card rounded-xl shadow-lg p-4 text-white`} style={{ background: bgColor }}>
+       
         <div className="flex justify-between items-center">
             <Icon size={28} />
             <span className="text-sm">{change}</span>
         </div>
         <p className="text-lg font-semibold mt-2">{title}</p>
         <p className="text-3xl font-bold">{value}</p>
+        <img src={imageSrc} alt={title} className="h-8 w-8 rounded-md object-cover" />
     </div>
 );
 
 StatCard.propTypes = {
     icon: PropTypes.elementType.isRequired,
+    imageSrc: PropTypes.string,
     title: PropTypes.string.isRequired,
     value: PropTypes.string.isRequired,
     change: PropTypes.string.isRequired,
@@ -53,10 +56,10 @@ const DashboardPage = () => {
         <div className="flex flex-col gap-y-6 p-6">
             <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Dashboard</h1>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <StatCard icon={Package} title="Weekly Users" value="714k" change="+2.6%" bgColor="#4A90E2" />
-                <StatCard icon={Users} title="Length of interaction" value="1.35m" change="-0.1%" bgColor="#AB47BC" />
-                <StatCard icon={DollarSign} title="Person in front of the screen" value="1.72m" change="+2.8%" bgColor="#FBC02D" />
-                <StatCard icon={CreditCard} title="Hand gesture interactions" value="234" change="+3.6%" bgColor="#E57373" />
+                <StatCard  icon={Package}  title="Weekly Users" value="714k" change="+2.6%" bgColor="#4A90E2" imageSrc="/filters/flowers.png" />
+                <StatCard icon={Users} title="Length of interaction" value="1.35m" change="-0.1%" bgColor="#AB47BC" imageSrc="/filters/flowers.png"/>
+                <StatCard icon={DollarSign} title="Person in front of the screen" value="1.72m" change="+2.8%" bgColor="#FBC02D" imageSrc="/filters/flowers.png"/>
+                <StatCard icon={CreditCard} title="Hand gesture interactions" value="234" change="+3.6%" bgColor="#E57373" imageSrc="/filters/flowers.png"/>
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7 text-slate-900 dark:text-white">
                 <div className="card col-span-1 md:col-span-2 lg:col-span-3 bg-white shadow-md p-4 rounded-xl">
