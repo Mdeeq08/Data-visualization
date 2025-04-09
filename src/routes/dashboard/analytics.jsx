@@ -1,11 +1,9 @@
-import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, BarChart, Bar, PieChart, Pie, Cell, Legend } from "recharts";
+import {  ResponsiveContainer, Tooltip, XAxis, YAxis, BarChart, Bar, PieChart, Pie, Cell, Legend } from "recharts";
 import { useTheme } from "@/hooks/use-theme";
-import { overviewData, recentSalesData, topProducts } from "@/constants";
 import { Footer } from "@/layouts/footer";
 
 const COLORS = ["#4285F4", "#FBBC05", "#34A853", "#EA4335"];
 
-import PropTypes from "prop-types";
 
 // Analytics.js
 

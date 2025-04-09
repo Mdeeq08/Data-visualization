@@ -1,25 +1,27 @@
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, BarChart, Bar, PieChart, Pie, Cell, Legend } from "recharts";
 import { useTheme } from "@/hooks/use-theme";
-import { overviewData, recentSalesData, topProducts } from "@/constants";
+import { overviewData} from "@/constants";
 import { Footer } from "@/layouts/footer";
-import { CreditCard, DollarSign, Package, Users } from "lucide-react";
+//import { CreditCard, DollarSign, Package, Users } from "lucide-react";
 
 const COLORS = ["#4285F4", "#FBBC05", "#34A853", "#EA4335"];
 
 import PropTypes from "prop-types";
 
-const StatCard = ({ imageSrc, icon: Icon, title, value, change, bgColor }) => (
-    <div className={`card rounded-xl shadow-lg p-4 text-white`} style={{ background: bgColor }}>
-       
-        <div className="flex justify-between items-center">
-            <Icon size={28} />
-            <span className="text-sm">{change}</span>
+const StatCard = ({ imageSrc, title, value, change, bgColor }) => (
+    <div className={`card rounded-xl shadow-lg p-4 text-white flex flex-col justify-between`} style={{ background: bgColor }}>
+      <div className="flex justify-between items-start">
+        <div>
+          <p className="text-3xl font-bold text-white/s90 mb-1">{title}</p>
+          <p className="text-3xl font-bold text-white">{value}</p>
         </div>
-        <p className="text-lg font-semibold mt-2">{title}</p>
-        <p className="text-3xl font-bold">{value}</p>
-        <img src={imageSrc} alt={title} className="h-8 w-8 rounded-md object-cover" />
+        <span className="text-sm text-white/80">{change}</span>
+      </div>
+      <div className="flex flex-col items-center mt-4">
+        <img src={imageSrc} alt={title} className="w-30 h-30 object-contain rounded-full" />
+      </div>
     </div>
-);
+  );
 
 StatCard.propTypes = {
     icon: PropTypes.elementType.isRequired,
@@ -39,6 +41,7 @@ const DashboardPage = () => {
         { name: "Africa", value: 6.3 },
     ]
     
+    
     const barData = [
         { name: "Jan", men: 40, women: 50 },
         { name: "Feb", men: 30, women: 70 },
@@ -56,10 +59,10 @@ const DashboardPage = () => {
         <div className="flex flex-col gap-y-6 p-6">
             <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Dashboard</h1>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <StatCard  icon={Package}  title="Weekly Users" value="714k" change="+2.6%" bgColor="#4A90E2" imageSrc="/filters/flowers.png" />
-                <StatCard icon={Users} title="Length of interaction" value="1.35m" change="-0.1%" bgColor="#AB47BC" imageSrc="/filters/flowers.png"/>
-                <StatCard icon={DollarSign} title="Person in front of the screen" value="1.72m" change="+2.8%" bgColor="#FBC02D" imageSrc="/filters/flowers.png"/>
-                <StatCard icon={CreditCard} title="Hand gesture interactions" value="234" change="+3.6%" bgColor="#E57373" imageSrc="/filters/flowers.png"/>
+                <StatCard  title="Filter 1" imageSrc="/filters/flowers.png" change="+2.6%" bgColor="#4A90E2"/>
+                <StatCard  title="Filter 2" imageSrc="/filters/flowers.png" bgColor="#AB47BC" />
+                <StatCard  title="Filter 3" imageSrc="/filters/flowers.png" bgColor="#FBC02D" />
+                <StatCard  title="Filter 4" imageSrc="/filters/flowers.png" bgColor="#E57373" />
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7 text-slate-900 dark:text-white">
                 <div className="card col-span-1 md:col-span-2 lg:col-span-3 bg-white shadow-md p-4 rounded-xl">
@@ -68,7 +71,7 @@ const DashboardPage = () => {
                         <PieChart>
                             <Tooltip contentStyle={{ backgroundColor: theme === "light" ? "white" : "#1e293b", borderRadius: "10px", color: theme === "light" ? "black" : "white" }} />
                             <Legend verticalAlign="bottom" align="center" />
-                            <Pie data={pieData} cx="50%" cy="50%" innerRadius={0} outerRadius={90} fill="#8884d8" dataKey="value" label>
+                            <Pie data={pieData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} fill="#8884d8" dataKey="value" label>
                                 {pieData.map((entry, index) => (
                                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                 ))}
@@ -82,7 +85,7 @@ const DashboardPage = () => {
                         <BarChart data={barData} barSize={30}>
                             <XAxis dataKey="name" stroke={theme === "light" ? "#475569" : "#94a3b8"} />
                             <YAxis />
-                            <Tooltip cursor={{ fill: "#f0f0f0" }} contentStyle={{ backgroundColor: theme === "light" ? "white" : "#1e293b", borderRadius: "10px", color: theme === "light" ? "black" : "white" }} />
+                            <Tooltip cursor={{ fill: "#f0f0f0" }} contentStyle={{ backgroundColor: theme === "light" ? "white" : "#1e293b", borderRadius: "100px", color: theme === "light" ? "black" : "white" }} />
                             <Legend verticalAlign="top" align="right" />
                             <Bar dataKey="men" fill="#2563eb" radius={[10, 10, 0, 0]} />
                             <Bar dataKey="women" fill="#60a5fa" radius={[10, 10, 0, 0]} />
