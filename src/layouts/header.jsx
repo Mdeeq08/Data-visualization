@@ -13,10 +13,25 @@ export const Header = ({ collapsed, setCollapsed }) => {
         <header className="relative z-10 flex h-[60px] items-center justify-between bg-white px-4 shadow-md transition-colors dark:bg-slate-900">
             <div className="flex items-center gap-x-3">
                 <button
-                    className="btn-ghost size-10"
-                    onClick={() => setCollapsed(!collapsed)}
+                    onClick={() => setCollapsed((prev) => !prev)}
+                    className="rounded-lg p-2 text-slate-600 hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-700 md:hidden"
+                    aria-label="Toggle sidebar"
                 >
-                    <ChevronsLeft className={collapsed && "rotate-180"} />
+                    {/* Hamburger icon */}
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={2}
+                        stroke="currentColor"
+                        className="h-6 w-6"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M4 6h16M4 12h16M4 18h16"
+                        />
+                    </svg>
                 </button>
                 {/* <div className="input">
                     <Search

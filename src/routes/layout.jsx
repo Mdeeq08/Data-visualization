@@ -1,53 +1,52 @@
 import { Outlet } from "react-router-dom";
-
-import { useMediaQuery } from "@uidotdev/usehooks";
 import { useClickOutside } from "@/hooks/use-click-outside";
 
 import { Sidebar } from "@/layouts/sidebar";
 import { Header } from "@/layouts/header";
-
 import { cn } from "@/utils/cn";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 const Layout = () => {
-    const isDesktopDevice = useMediaQuery("(min-width: 768px)");
-    const [collapsed, setCollapsed] = useState(!isDesktopDevice);
+  // Only control mobile toggle
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const sidebarRef = useRef(null);
 
-    const sidebarRef = useRef(null);
+  // Close sidebar if clicked outside on mobile
+  useClickOutside([sidebarRef], () => {
+    if (mobileOpen) setMobileOpen(false);
+  });
 
-    useEffect(() => {
-        setCollapsed(!isDesktopDevice);
-    }, [isDesktopDevice]);
+  return (
+    <div className="min-h-screen bg-slate-100 transition-colors dark:bg-slate-950">
+      {/* Black overlay on mobile when sidebar is open */}
+      <div
+        className={cn(
+          "pointer-events-none fixed inset-0 -z-10 bg-black opacity-0 transition-opacity",
+          mobileOpen && "pointer-events-auto z-50 opacity-30 md:hidden"
+        )}
+      />
 
-    useClickOutside([sidebarRef], () => {
-        if (!isDesktopDevice && !collapsed) {
-            setCollapsed(true);
-        }
-    });
+      {/* 🔒 Always collapsed on desktop, toggle on mobile */}
+      <Sidebar
+        ref={sidebarRef}
+        collapsed={true}
+        className={cn(
+          mobileOpen ? "max-md:left-0" : "max-md:-left-full"
+        )}
+      />
 
-    return (
-        <div className="min-h-screen bg-slate-100 transition-colors dark:bg-slate-950">
-            <div
-                className={cn(
-                    "pointer-events-none fixed inset-0 -z-10 bg-black opacity-0 transition-opacity",
-                    !collapsed && "max-md:pointer-events-auto max-md:z-50 max-md:opacity-30",
-                )}
-            />
-            <Sidebar
-                ref={sidebarRef}
-                collapsed={collapsed}
-            />
-            <div className={cn("transition-[margin] duration-300", collapsed ? "md:ml-[70px]" : "md:ml-[240px]")}>
-                <Header
-                    collapsed={collapsed}
-                    setCollapsed={setCollapsed}
-                />
-                <div className="h-[calc(100vh-60px)] overflow-y-auto overflow-x-hidden p-6">
-                    <Outlet />
-                </div>
-            </div>
+      {/* Layout shift to allow sidebar space */}
+      <div className="transition-[margin] duration-300 md:ml-[70px]">
+        <Header
+          collapsed={true}
+          setCollapsed={() => setMobileOpen((prev) => !prev)}
+        />
+        <div className="h-[calc(100vh-60px)] overflow-y-auto overflow-x-hidden p-6">
+          <Outlet />
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default Layout;

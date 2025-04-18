@@ -10,58 +10,51 @@ import { cn } from "@/utils/cn";
 
 import PropTypes from "prop-types";
 
-export const Sidebar = forwardRef(({ collapsed }, ref) => {
+export const Sidebar = forwardRef(({ collapsed, className }, ref) => {
     return (
-        <aside
-            ref={ref}
-            className={cn(
-                "fixed z-[100] flex h-full w-[240px] flex-col overflow-x-hidden border-r border-slate-300 bg-white [transition:_width_300ms_cubic-bezier(0.4,_0,_0.2,_1),_left_300ms_cubic-bezier(0.4,_0,_0.2,_1),_background-color_150ms_cubic-bezier(0.4,_0,_0.2,_1),_border_150ms_cubic-bezier(0.4,_0,_0.2,_1)] dark:border-slate-700 dark:bg-slate-900",
-                collapsed ? "md:w-[70px] md:items-center" : "md:w-[240px]",
-                collapsed ? "max-md:-left-full" : "max-md:left-0",
-            )}
-        >
-            <div className="flex gap-x-3 p-3">
-                {/* <img
-                    src={logoLight}
-                    alt="TELLAR"
-                    className="dark:hidden"
-                />
-                <img
-                    src={logoDark}
-                    alt="TELLAR"
-                    className="hidden dark:block"
-                /> */}
-                {!collapsed && <p className="text-lg font-medium text-slate-900 transition-colors dark:text-slate-50">TellAR</p>}
-            </div>
-            <div className="flex w-full flex-col gap-y-4 overflow-y-auto overflow-x-hidden p-3 [scrollbar-width:_thin]">
-                {navbarLinks.map((navbarLink) => (
-                    <nav
-                        key={navbarLink.title}
-                        className={cn("sidebar-group", collapsed && "md:items-center")}
-                    >
-                        <p className={cn("sidebar-group-title", collapsed && "md:w-[45px]")}>{navbarLink.title}</p>
-                        {navbarLink.links.map((link) => (
-                            <NavLink
-                                key={link.label}
-                                to={link.path}
-                                className={cn("sidebar-item", collapsed && "md:w-[45px]")}
-                            >
-                                <link.icon
-                                    size={22}
-                                    className="flex-shrink-0"
-                                />
-                                {!collapsed && <p className="whitespace-nowrap">{link.label}</p>}
-                            </NavLink>
-                        ))}
-                    </nav>
-                ))}
-            </div>
-        </aside>
+      <aside
+        ref={ref}
+        className={cn(
+          // Always collapsed width & alignment
+          "fixed z-[100] flex h-full w-[70px] flex-col items-center overflow-x-hidden border-r border-slate-300 bg-white dark:border-slate-700 dark:bg-slate-900",
+          // Slide in/out on mobile
+          "transition-all duration-300 md:left-0",
+          "max-md:top-0 max-md:bottom-0 max-md:z-50 max-md:w-[70px]",
+          className // allows mobile left shift to be passed from Layout
+        )}
+      >
+        <div className="flex justify-center p-3">
+          <img src={logoLight} alt="TELLAR" className="dark:hidden w-6 h-6" />
+          <img src={logoDark} alt="TELLAR" className="hidden dark:block w-6 h-6" />
+        </div>
+  
+        <div className="flex flex-col gap-y-4 overflow-y-auto p-3 text-slate-900 dark:text-white">
+          {navbarLinks.map((navbarLink) => (
+            <nav key={navbarLink.title} className="flex flex-col items-center">
+              {/* Hide section titles when collapsed */}
+              {/* <p className="sidebar-group-title text-xs text-center text-slate-500 dark:text-slate-400">
+                {navbarLink.title}
+              </p> */}
+              {navbarLink.links.map((link) => (
+                <NavLink
+                  key={link.label}
+                  to={link.path}
+                  className="flex h-10 w-10 items-center justify-center rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700"
+                >
+                  <link.icon size={22} />
+                </NavLink>
+              ))}
+            </nav>
+          ))}
+        </div>
+      </aside>
     );
-});
+  });
+  
 
 Sidebar.displayName = "Sidebar";
 
 Sidebar.propTypes = {
     collapsed: PropTypes.bool,
+    className: PropTypes.string,
 };
