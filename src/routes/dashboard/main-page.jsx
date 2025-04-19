@@ -1,15 +1,18 @@
+// src/routes/dashboard/page.jsx
+import { useEffect, useState } from "react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, BarChart, Bar, PieChart, Pie, Cell, Legend, CartesianGrid } from "recharts";
 import { useTheme } from "@/hooks/use-theme";
-//import { overviewData } from "@/constants";
-import { Footer } from "@/layouts/footer";
-//import { CreditCard, DollarSign, Package, Users } from "lucide-react";
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
-import { getBarChartData, getPieChartData, getAreaChartData } from "../../data/chartDataService";
+import { getBarChartData, getPieChartData, getAreaChartData } from "@/data/chartDataService";
+import { motion } from "framer-motion";
 
+// Component for each filter card at the top of the dashboard
 const StatCard = ({ imageSrc, title, value, change, bgColor }) => (
-    <div
-        className={`card flex flex-col justify-between rounded-xl p-4 text-white shadow-lg`}
+    <motion.div
+        initial={{ opacity: 0, y: 300 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+        className="card flex flex-col justify-between rounded-xl p-4 text-white shadow-lg"
         style={{ background: bgColor }}
     >
         <div className="flex items-start justify-between">
@@ -26,18 +29,19 @@ const StatCard = ({ imageSrc, title, value, change, bgColor }) => (
                 className="w-30 h-30 rounded-full object-contain"
             />
         </div>
-    </div>
+    </motion.div>
 );
 
 StatCard.propTypes = {
-    icon: PropTypes.elementType.isRequired,
+    icon: PropTypes.elementType,
     imageSrc: PropTypes.string,
     title: PropTypes.string.isRequired,
-    value: PropTypes.string.isRequired,
-    change: PropTypes.string.isRequired,
+    value: PropTypes.string,
+    change: PropTypes.string,
     bgColor: PropTypes.string.isRequired,
 };
 
+// Main dashboard page
 const DashboardPage = () => {
     const { theme } = useTheme();
     const [barData, setBarData] = useState([]);
@@ -45,6 +49,7 @@ const DashboardPage = () => {
     const [overviewData, setOverviewData] = useState([]);
     const COLORS = ["#4A90E2", "#AB47BC", "#FBC02D", "#E57373"];
 
+    // Fetch all data for the dashboard
     useEffect(() => {
         getBarChartData().then(setBarData);
         getPieChartData().then(setPieData);
@@ -53,7 +58,10 @@ const DashboardPage = () => {
 
     return (
         <div className="flex flex-col gap-y-6 p-6">
+            {/* Page title */}
             <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Dashboard</h1>
+
+            {/* Filter statistic cards */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <StatCard
                     title="Filter 1"
@@ -77,11 +85,18 @@ const DashboardPage = () => {
                     bgColor="#E57373"
                 />
             </div>
+
+            {/* Pie and Bar Charts */}
             <div className="grid grid-cols-1 gap-4 text-slate-900 dark:text-white md:grid-cols-2 lg:grid-cols-7">
-                <div className="card col-span-1 rounded-xl bg-white p-4 shadow-md md:col-span-2 lg:col-span-3">
+                {/* Pie Chart */}
+                <motion.div
+                    initial={{ opacity: 0, y: 200 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="card col-span-1 rounded-xl bg-white p-4 shadow-md md:col-span-2 lg:col-span-3"
+                >
                     <p className="text-lg font-semibold">Filters</p>
                     <p className="text-sm text-slate-500 dark:text-slate-400">Interactions By Filter Engagement</p>
-                    
                     <ResponsiveContainer
                         width="100%"
                         height={250}
@@ -118,8 +133,15 @@ const DashboardPage = () => {
                             </Pie>
                         </PieChart>
                     </ResponsiveContainer>
-                </div>
-                <div className="card col-span-1 rounded-xl bg-white p-4 text-slate-900 shadow-md dark:text-white md:col-span-2 lg:col-span-4">
+                </motion.div>
+
+                {/* Bar Chart */}
+                <motion.div
+                    initial={{ opacity: 0, x: 200 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="card col-span-1 rounded-xl bg-white p-4 text-slate-900 shadow-md dark:text-white md:col-span-2 lg:col-span-4"
+                >
                     <p className="text-lg font-semibold">User Engagement</p>
                     <p className="text-sm text-slate-500 dark:text-slate-400">Interactions By Age</p>
                     <ResponsiveContainer
@@ -130,13 +152,11 @@ const DashboardPage = () => {
                             data={barData}
                             barSize={40}
                         >
-                            {/* Grid lines */}
                             <CartesianGrid
+                                vertical={false}
                                 strokeDasharray="3 3"
                                 stroke={theme === "light" ? "#e2e8f0" : "#334155"}
                             />
-
-                            {/* X-axis: days of the week */}
                             <XAxis
                                 dataKey="day"
                                 tickLine={false}
@@ -144,16 +164,12 @@ const DashboardPage = () => {
                                 stroke={theme === "light" ? "#475569" : "#94a3b8"}
                                 style={{ fontSize: "0.85rem" }}
                             />
-
-                            {/* Y-axis */}
                             <YAxis
                                 tickLine={false}
                                 axisLine={false}
                                 stroke={theme === "light" ? "#475569" : "#94a3b8"}
                                 style={{ fontSize: "0.85rem" }}
                             />
-
-                            {/* Tooltip */}
                             <Tooltip
                                 cursor={{ fill: "#0000" }}
                                 contentStyle={{
@@ -162,19 +178,14 @@ const DashboardPage = () => {
                                     color: theme === "light" ? "black" : "white",
                                 }}
                             />
-
-                            {/* Legend */}
                             <Legend
                                 verticalAlign="top"
                                 align="right"
                             />
-
-                            {/* Bars radius={[10, 10, 0, 0]}*/}
                             <Bar
                                 dataKey="Over40M"
                                 stackId="a"
                                 fill="#6366f1"
-                                stroke={theme === "light" ? "#e2e8f0" : "#334155"}
                             />
                             <Bar
                                 dataKey="Under40M"
@@ -193,9 +204,16 @@ const DashboardPage = () => {
                             />
                         </BarChart>
                     </ResponsiveContainer>
-                </div>
+                </motion.div>
             </div>
-            <div className="card mt-4 rounded-xl bg-white p-4 text-slate-900 shadow-md dark:text-white">
+
+            {/* Area Chart */}
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                className="card mt-4 rounded-xl bg-white p-4 text-slate-900 shadow-md dark:text-white"
+            >
                 <p className="text-lg font-semibold">User Engagement</p>
                 <p className="text-sm text-slate-500 dark:text-slate-400">Interactions tracked over the week</p>
                 <ResponsiveContainer
@@ -206,7 +224,7 @@ const DashboardPage = () => {
                         <div className="flex items-center gap-2">
                             <div
                                 className="h-3 w-3 rounded-full"
-                                style={{ backgroundColor: "	#6366f1" }}
+                                style={{ backgroundColor: "#6366f1" }}
                             ></div>
                             <span>Interacted</span>
                             <span className="font-bold text-green-600">{overviewData.reduce((sum, d) => sum + d.Interacted, 0)}</span>
@@ -221,6 +239,11 @@ const DashboardPage = () => {
                         </div>
                     </div>
                     <AreaChart data={overviewData}>
+                        <CartesianGrid
+                            vertical={false}
+                            strokeDasharray="3 3"
+                            stroke={theme === "light" ? "#e2e8f0" : "#334155"}
+                        />
                         <defs>
                             <linearGradient
                                 id="colorInteracted"
@@ -231,12 +254,12 @@ const DashboardPage = () => {
                             >
                                 <stop
                                     offset="5%"
-                                    stopColor="	#6366f1"
+                                    stopColor="#6366f1"
                                     stopOpacity={0.8}
                                 />
                                 <stop
                                     offset="95%"
-                                    stopColor="	#6366f1"
+                                    stopColor="#6366f1"
                                     stopOpacity={0}
                                 />
                             </linearGradient>
@@ -259,16 +282,20 @@ const DashboardPage = () => {
                                 />
                             </linearGradient>
                         </defs>
-
-                        <XAxis 
-                        dataKey="day"
-                         />
-                        <YAxis />
+                        <XAxis
+                            dataKey="day"
+                            tickLine={false}
+                            axisLine={false}
+                        />
+                        <YAxis
+                            tickLine={false}
+                            axisLine={false}
+                        />
                         <Tooltip />
                         <Area
                             type="monotone"
                             dataKey="Interacted"
-                            stroke="	#6366f1"
+                            stroke="#6366f1"
                             fill="url(#colorInteracted)"
                         />
                         <Area
@@ -279,8 +306,7 @@ const DashboardPage = () => {
                         />
                     </AreaChart>
                 </ResponsiveContainer>
-            </div>
-            <Footer />
+            </motion.div>
         </div>
     );
 };

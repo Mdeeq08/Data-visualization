@@ -3,8 +3,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/theme-context";
 
 import Layout from "@/routes/layout";
-import DashboardPage from "@/routes/dashboard/page";
+import DashboardPage from "@/routes/dashboard/main-page";
 import DashboardAnalytics from "@/routes/dashboard/analytics";
+import ReportsPage from "@/routes/dashboard/reports";
 
 function App() {
     const router = createBrowserRouter([
@@ -22,8 +23,8 @@ function App() {
                 },
                 {
                     path: "reports",
-                    element: <h1 className="title">Reports</h1>,
-                },       
+                    element: <ReportsPage />,
+                  }      
             ],
         },
     ]);

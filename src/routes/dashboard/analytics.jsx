@@ -68,7 +68,7 @@ const Analytics = () => {
         <BarChart data={data}>
           <XAxis dataKey="month" stroke="#cbd5e1" />
           <YAxis stroke="#cbd5e1" />
-          <Tooltip contentStyle={{ backgroundColor: "#1e293b", borderRadius: "8px", border: "none" }} />
+          <Tooltip contentStyle={{ borderRadius: "8px", border: "none" }} />
           <Legend wrapperStyle={{ color: "white" }} />
           <Bar dataKey="Asia" stackId="a" fill="#14b8a6" />
           <Bar dataKey="Europe" stackId="a" fill="#facc15" />
