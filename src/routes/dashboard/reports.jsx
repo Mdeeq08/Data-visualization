@@ -1,8 +1,10 @@
 // src/routes/reports/page.jsx
 import { useEffect, useState, useMemo } from "react";
 import { getAllUsers } from "@/data/chartDataService";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Download } from "lucide-react";
 import { motion } from "framer-motion";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const ROWS_PER_PAGE = 20;
 const FILTER_COLORS = ["bg-[#4A90E2]", "bg-[#AB47BC]", "bg-[#FBC02D]", "bg-[#E57373]"];
@@ -53,11 +55,74 @@ const ReportsPage = () => {
     currentPage * ROWS_PER_PAGE
   );
 
+
   const getCount = (filter) => users.filter(filterConditions[filter]).length;
+ 
+  const exportCSV = () => {
+    const rows = [
+      ["ID", "Age", "Gender", "Duration (s)", "Interacted", "Hand Gestures", "Filter"],
+      ...filteredUsers.map(u => [
+        u.id,
+        u.age,
+        u.gender,
+        u.duration.toFixed(2),
+        u.interacted ? "Yes" : "No",
+        u.handGestures ? "Yes" : "No",
+        u.filter
+      ])
+    ];
+    const csvContent = rows.map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `report_${activeFilter}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const exportPDF = () => {
+    const doc = new jsPDF();
+    autoTable(doc, {
+      head: [["ID", "Age", "Gender", "Duration (s)", "Interacted", "Hand Gestures", "Filter"]],
+      body: filteredUsers.map(u => [
+        u.id,
+        u.age,
+        u.gender,
+        u.duration.toFixed(2),
+        u.interacted ? "Yes" : "No",
+        u.handGestures ? "Yes" : "No",
+        u.filter
+      ])
+    });
+    doc.save(`report_${activeFilter}.pdf`);
+  };
 
   return (
+    <motion.div
+    initial={{ opacity: 0, y: 300 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.7 }}
+    >
     <div className="space-y-6 overflow-x-hidden">
-      <h1 className="text-3xl font-bold text-slate-900 dark:text-white">User-List</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Reports</h1>
+        <div className="flex gap-2">
+          <button
+            onClick={exportCSV}
+            className="flex items-center gap-2 px-3 py-1 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+          >
+            <Download size={16} /> CSV
+          </button>
+          <button
+            onClick={exportPDF}
+            className="flex items-center gap-2 px-3 py-1 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+          >
+            <Download size={16} /> PDF
+          </button>
+        </div>
+      </div>
 
       {/* Filters */}
       <div className="flex flex-wrap gap-2 bg-white dark:bg-slate-900 p-3 rounded-xl border border-transparent">
@@ -79,14 +144,11 @@ const ReportsPage = () => {
             </span>
           </button>
         ))}
+        
       </div>
 
       {/* Table */}
-      <motion.div
-        initial={{ opacity: 0, y: 300 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7 }}
-        >
+     
       <div className="overflow-x-auto rounded-xl shadow-sm bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-700" >
         <table className="min-w-full text-sm text-left ">
           <thead className="bg-slate-200 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300">
@@ -138,7 +200,7 @@ const ReportsPage = () => {
           </motion.tbody>
         </table>
       </div>
-      </motion.div>
+      
       {/* Pagination */}
       <div className="flex items-center justify-between mt-4">
         <button
@@ -160,6 +222,8 @@ const ReportsPage = () => {
         </button>
       </div>
     </div>
+    </motion.div>
+
   );
 };
 

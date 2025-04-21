@@ -19,7 +19,7 @@ To get started follow these steps:
 Using CLI
 
 ```bash
-git clone https://github.com/xdcode2/dashboard-ui-design.git
+git clone https://github.com/Mdeeq08/Data-visualization.git
 ```
 
 **\*\*_Ensure you have installed [Git](https://git-scm.com) on your machine._**
@@ -43,7 +43,7 @@ npm install
 #### Running the Project
 
 ```bash
-npm run dev
+npm start
 ```
 
 **\*\*_This project uses [Vite](https://vitejs.dev)._**
