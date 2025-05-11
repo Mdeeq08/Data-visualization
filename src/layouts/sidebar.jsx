@@ -3,14 +3,14 @@ import { NavLink } from "react-router-dom";
 
 import { navbarLinks } from "@/constants";
 
-import logoLight from "@/assets/logo-light.svg";
-import logoDark from "@/assets/logo-dark.svg";
+import logoLight from "@/assets/logo-light.png";
+import logoDark from "@/assets/logo-dark.png";
 
 import { cn } from "@/utils/cn";
 
 import PropTypes from "prop-types";
 
-export const Sidebar = forwardRef(({ collapsed, className }, ref) => {
+export const Sidebar = forwardRef(({ className }, ref) => {
     return (
       <aside
         ref={ref}

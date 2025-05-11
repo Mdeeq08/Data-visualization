@@ -1,17 +1,18 @@
-// src/routes/dashboard/page.jsx
+// src/routes/dashboard/main-page.jsx
 import { useEffect, useState } from "react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, BarChart, Bar, PieChart, Pie, Cell, Legend, CartesianGrid } from "recharts";
 import { useTheme } from "@/hooks/use-theme";
 import PropTypes from "prop-types";
-import { getBarChartData, getPieChartData, getAreaChartData } from "@/data/chartDataService";
-import { motion } from "framer-motion";
+import { getBarChartData, getPieChartData, getAreaChartData, fetchRawData } from "@/data/chartDataService";
+import { motion } from "framer-motion"; // Ensure this import exists at the top of the file
+import Loader from "@/layouts/Loader";
 
 // Component for each filter card at the top of the dashboard
 const StatCard = ({ imageSrc, title, value, change, bgColor }) => (
     <motion.div
-        initial={{ opacity: 0, y: 300 }}
+        initial={{ opacity: 0, y: 1 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7 }}
+        transition={{ duration: 0.0 }}
         className="card flex flex-col justify-between rounded-xl p-4 text-white shadow-lg"
         style={{ background: bgColor }}
     >
@@ -47,15 +48,29 @@ const DashboardPage = () => {
     const [barData, setBarData] = useState([]);
     const [pieData, setPieData] = useState([]);
     const [overviewData, setOverviewData] = useState([]);
+    const [loading, setLoading] = useState(true);
     const COLORS = ["#4A90E2", "#AB47BC", "#FBC02D", "#E57373"];
 
     // Fetch all data for the dashboard
-    useEffect(() => {
-        getBarChartData().then(setBarData);
-        getPieChartData().then(setPieData);
-        getAreaChartData().then(setOverviewData);
-    }, []);
+  useEffect(() => {
+  const loadWithDelay = async () => {
+    const dataPromise = fetchRawData();
+    const delayPromise = new Promise((resolve) => setTimeout(resolve, 1000));
 
+    const [data] = await Promise.all([dataPromise, delayPromise]);
+
+    setBarData(getBarChartData(data));
+    setPieData(getPieChartData(data));
+    setOverviewData(getAreaChartData(data));
+    setLoading(false);
+  };
+
+  loadWithDelay();
+}, []);
+
+
+ if (loading) return <Loader message="Loading dashboard..." />;
+      
     return (
         <div className="flex flex-col gap-y-6 p-6">
             {/* Page title */}
@@ -90,9 +105,9 @@ const DashboardPage = () => {
             <div className="grid grid-cols-1 gap-4 text-slate-900 dark:text-white md:grid-cols-2 lg:grid-cols-7">
                 {/* Pie Chart */}
                 <motion.div
-                    initial={{ opacity: 0, y: 200 }}
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.0 }}
                     className="card col-span-1 rounded-xl bg-white p-4 shadow-md md:col-span-2 lg:col-span-3"
                 >
                     <p className="text-lg font-semibold">Filters</p>
@@ -137,9 +152,9 @@ const DashboardPage = () => {
 
                 {/* Bar Chart */}
                 <motion.div
-                    initial={{ opacity: 0, x: 200 }}
+                    initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6 }}
+                    transition={{ duration: 0.0 }}
                     className="card col-span-1 rounded-xl bg-white p-4 text-slate-900 shadow-md dark:text-white md:col-span-2 lg:col-span-4"
                 >
                     <p className="text-lg font-semibold">User Engagement</p>
@@ -161,6 +176,7 @@ const DashboardPage = () => {
                                 dataKey="day"
                                 tickLine={false}
                                 axisLine={false}
+                                tickFormatter={(date) => date.slice(5)} // Shows MM-DD
                                 stroke={theme === "light" ? "#475569" : "#94a3b8"}
                                 style={{ fontSize: "0.85rem" }}
                             />
@@ -183,22 +199,22 @@ const DashboardPage = () => {
                                 align="right"
                             />
                             <Bar
-                                dataKey="Over40M"
+                                dataKey="Over25M"
                                 stackId="a"
                                 fill="#6366f1"
                             />
                             <Bar
-                                dataKey="Under40M"
+                                dataKey="Under25M"
                                 stackId="a"
                                 fill="#10b981"
                             />
                             <Bar
-                                dataKey="Over40F"
+                                dataKey="Over25F"
                                 stackId="a"
                                 fill="#f59e0b"
                             />
                             <Bar
-                                dataKey="Under40F"
+                                dataKey="Under25F"
                                 stackId="a"
                                 fill="#f43f5e"
                             />
@@ -284,6 +300,7 @@ const DashboardPage = () => {
                         </defs>
                         <XAxis
                             dataKey="day"
+                            tickFormatter={(date) => date.slice(5)} // Shows MM-DD
                             tickLine={false}
                             axisLine={false}
                         />

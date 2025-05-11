@@ -13,7 +13,7 @@ const Layout = () => {
 
   // Close sidebar if clicked outside on mobile
   useClickOutside([sidebarRef], () => {
-    if (mobileOpen) setMobileOpen(false);
+    if (mobileOpen) setMobileOpen(false)
   });
 
   return (
