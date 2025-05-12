@@ -27,7 +27,7 @@ const StatCard = ({ imageSrc, title, value, change, bgColor }) => (
             <img
                 src={imageSrc}
                 alt={title}
-                className="w-30 h-30 rounded-full object-contain"
+                className="w-100 h-100 rounded-full object-contain"
             />
         </div>
     </motion.div>
@@ -80,23 +80,22 @@ const DashboardPage = () => {
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <StatCard
                     title="Filter 1"
-                    imageSrc="/filters/flowers.png"
-                    change="+2.6%"
+                    imageSrc="/filters/filter1.png"
                     bgColor="#4A90E2"
                 />
                 <StatCard
                     title="Filter 2"
-                    imageSrc="/filters/flowers.png"
+                    imageSrc="/filters/filter2.png"
                     bgColor="#AB47BC"
                 />
                 <StatCard
                     title="Filter 3"
-                    imageSrc="/filters/flowers.png"
+                    imageSrc="/filters/filter3.png"
                     bgColor="#FBC02D"
                 />
                 <StatCard
                     title="Filter 4"
-                    imageSrc="/filters/flowers.png"
+                    imageSrc="/filters/filter4.png"
                     bgColor="#E57373"
                 />
             </div>
