@@ -88,3 +88,27 @@
 .recharts-tooltip-item {
     @apply text-base font-medium !text-blue-500 dark:!text-blue-600;
 }
+/* Arrows */
+.slick-prev:before,
+.slick-next:before {
+  color: #1e293b; /* slate-900 */
+}
+
+.dark .slick-prev:before,
+.dark .slick-next:before {
+  color: #f8fafc; /* slate-50/white */
+}
+
+/* Dots */
+.slick-dots li button:before {
+  font-size: 10px;
+  color: #1e293b; /* slate-900 */
+  opacity: 0.75;
+}
+.slick-dots li.slick-active button:before {
+  opacity: 1;
+}
+
+.dark .slick-dots li button:before {
+  color: #f8fafc; /* slate-50/white */
+}

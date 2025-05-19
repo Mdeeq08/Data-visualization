@@ -6,41 +6,70 @@ import PropTypes from "prop-types";
 import { getBarChartData, getPieChartData, getAreaChartData, fetchRawData } from "@/data/chartDataService";
 import { motion } from "framer-motion"; // Ensure this import exists at the top of the file
 import Loader from "@/layouts/Loader";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 // Component for each filter card at the top of the dashboard
-const StatCard = ({ imageSrc, title, value, change, bgColor }) => (
-    <motion.div
-        initial={{ opacity: 0, y: 1 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.0 }}
-        className="card flex flex-col justify-between rounded-xl p-4 text-white shadow-lg"
-        style={{ background: bgColor }}
-    >
-        <div className="flex items-start justify-between">
-            <div>
-                <p className="text-white/s90 mb-1 text-3xl font-bold">{title}</p>
-                <p className="text-3xl font-bold text-white">{value}</p>
-            </div>
-            <span className="text-sm text-white/80">{change}</span>
-        </div>
-        <div className="mt-4 flex flex-col items-center">
-            <img
-                src={imageSrc}
-                alt={title}
-                className="w-100 h-100 rounded-full object-contain"
-            />
-        </div>
-    </motion.div>
+const StatCard = ({ imageSrc, title, value, change, bgColor, imgSize = 180 }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 1 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.3 }}
+    className="card flex flex-col justify-between rounded-xl p-4 text-white shadow-lg h-full mx-2"
+    style={{ background: bgColor }}
+  >
+    <div className="flex items-start justify-between">
+      <div>
+        <p className="text-white/s90 mb-1 text-3xl font-bold">{title}</p>
+        <p className="text-3xl font-bold text-white">{value}</p>
+      </div>
+      <span className="text-sm text-white/80">{change}</span>
+    </div>
+    <div className="mt-4 flex flex-col items-center">
+      <img
+        src={imageSrc}
+        alt={title}
+        className="rounded-full object-contain"
+        style={{ width: `${imgSize}px` }}
+      />
+    </div>
+  </motion.div>
 );
 
 StatCard.propTypes = {
-    icon: PropTypes.elementType,
-    imageSrc: PropTypes.string,
-    title: PropTypes.string.isRequired,
-    value: PropTypes.string,
-    change: PropTypes.string,
-    bgColor: PropTypes.string.isRequired,
+  icon: PropTypes.elementType,
+  imageSrc: PropTypes.string,
+  title: PropTypes.string.isRequired,
+  value: PropTypes.string,
+  change: PropTypes.string,
+  bgColor: PropTypes.string.isRequired,
+  imgSize: PropTypes.number,
 };
+
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    arrows: true,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 640,
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
+  };
 
 // Main dashboard page
 const DashboardPage = () => {
@@ -52,56 +81,39 @@ const DashboardPage = () => {
     const COLORS = ["#4A90E2", "#AB47BC", "#FBC02D", "#E57373"];
 
     // Fetch all data for the dashboard
-  useEffect(() => {
-  const loadWithDelay = async () => {
-    const dataPromise = fetchRawData();
-    const delayPromise = new Promise((resolve) => setTimeout(resolve, 1000));
+    useEffect(() => {
+        const loadWithDelay = async () => {
+            const dataPromise = fetchRawData();
+            const delayPromise = new Promise((resolve) => setTimeout(resolve, 1000));
 
-    const [data] = await Promise.all([dataPromise, delayPromise]);
+            const [data] = await Promise.all([dataPromise, delayPromise]);
 
-    setBarData(getBarChartData(data));
-    setPieData(getPieChartData(data));
-    setOverviewData(getAreaChartData(data));
-    setLoading(false);
-  };
+            setBarData(getBarChartData(data));
+            setPieData(getPieChartData(data));
+            setOverviewData(getAreaChartData(data));
+            setLoading(false);
+        };
 
-  loadWithDelay();
-}, []);
+        loadWithDelay();
+    }, []);
 
+    if (loading) return <Loader message="Loading dashboard..." />;
 
- if (loading) return <Loader message="Loading dashboard..." />;
-      
     return (
         <div className="flex flex-col gap-y-6 p-6">
             {/* Page title */}
             <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Dashboard</h1>
 
             {/* Filter statistic cards */}
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <StatCard
-                    title="Filter 1"
-                    imageSrc="/filters/filter1.png"
-                    bgColor="#4A90E2"
-                />
-                <StatCard
-                    title="Filter 2"
-                    imageSrc="/filters/filter2.png"
-                    bgColor="#AB47BC"
-                />
-                <StatCard
-                    title="Filter 3"
-                    imageSrc="/filters/filter3.png"
-                    bgColor="#FBC02D"
-                />
-                <StatCard
-                    title="Filter 4"
-                    imageSrc="/filters/filter4.png"
-                    bgColor="#E57373"
-                />
-            </div>
+            <Slider {...sliderSettings} className="px-2 mb-6">
+        <StatCard title="Filter 1" imageSrc="/filters/filter1.png" bgColor="bg-slate-100 dark:bg-slate-800" imgSize={250} />
+        <StatCard title="Filter 2" imageSrc="/filters/filter2.png" bgColor="bg-slate-100 dark:bg-slate-800" imgSize={250} />
+        <StatCard title="Filter 3" imageSrc="/filters/filter3.png" bgColor="bg-slate-100 dark:bg-slate-800" imgSize={250} />
+        <StatCard title="Filter 4" imageSrc="/filters/filter4.png" bgColor="bg-slate-100 dark:bg-slate-800" imgSize={250} />
+      </Slider>
 
             {/* Pie and Bar Charts */}
-            <div className="grid grid-cols-1 gap-4 text-slate-900 dark:text-white md:grid-cols-2 lg:grid-cols-7">
+            <div className="grid grid-cols-1 gap-4 text-slate-900 dark:text-white md:grid-cols-2 lg:grid-cols-7 px-2">
                 {/* Pie Chart */}
                 <motion.div
                     initial={{ opacity: 0, y: 10 }}

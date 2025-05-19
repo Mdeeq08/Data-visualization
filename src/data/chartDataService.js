@@ -1,21 +1,8 @@
 // src/data/chartDataService.js
-import { getPBUsers } from "./pbDataService";
+import { getPBUsers, generateRandomFilters, getRandomDuration  } from "./pbDataService";
 
 function formatDate(date) {
   return new Date(date).toLocaleDateString("en-CA"); // e.g., 2025-05-07
-}
-
-function generateRandomFilters() {
-  const all = [1, 2, 3, 4];
-  const count = Math.floor(Math.random() * 4) + 1;
-  const shuffled = [...all].sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, count);
-}
-
-function getRandomDuration() {
-  const min = 60;
-  const max = 300;
-  return +(Math.random() * (max - min) + min).toFixed(2);
 }
 
 export async function fetchRawData() {

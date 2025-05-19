@@ -1,4 +1,4 @@
-import { ChartColumn, Home, NotepadText,  } from "lucide-react";
+import { ChartColumn, Home, NotepadText, Images,  } from "lucide-react";
 //Package, PackagePlus, Settings, ShoppingBag, UserCheck, UserPlus, Users
 //import ProfileImage from "@/assets/profile-image.jpg";
 //import ProductImage from "@/assets/product-image.jpg";
@@ -21,6 +21,11 @@ export const navbarLinks = [
                 label: "Reports",
                 icon: NotepadText,
                 path: "/reports",
+            },
+              {
+                label: "Filter Performance",
+                icon: Images,
+                path: "/FilterPerformance",
             },
         ],
     },
