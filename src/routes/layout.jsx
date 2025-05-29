@@ -7,11 +7,12 @@ import { cn } from "@/utils/cn";
 import { useRef, useState } from "react";
 
 const Layout = () => {
-  // Only control mobile toggle
+  // State to control sidebar open/close on mobile
   const [mobileOpen, setMobileOpen] = useState(false);
+  // Ref for sidebar element
   const sidebarRef = useRef(null);
 
-  // Close sidebar if clicked outside on mobile
+  // Close sidebar when clicking outside (on mobile)
   useClickOutside([sidebarRef], () => {
     if (mobileOpen) setMobileOpen(false)
   });
@@ -26,7 +27,7 @@ const Layout = () => {
         )}
       />
 
-      {/* 🔒 Always collapsed on desktop, toggle on mobile */}
+      {/* Sidebar: always collapsed on desktop, toggled on mobile */}
       <Sidebar
         ref={sidebarRef}
         collapsed={true}
@@ -35,12 +36,13 @@ const Layout = () => {
         )}
       />
 
-      {/* Layout shift to allow sidebar space */}
+      {/* Main content area, shifted for sidebar on desktop */}
       <div className="transition-[margin] duration-300 md:ml-[70px]">
         <Header
           collapsed={true}
           setCollapsed={() => setMobileOpen((prev) => !prev)}
         />
+        {/* Page content area with scroll */}
         <div className="h-[calc(100vh-60px)] overflow-y-auto overflow-x-hidden p-6">
           <Outlet />
         </div>

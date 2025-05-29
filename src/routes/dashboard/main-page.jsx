@@ -12,42 +12,49 @@ import "slick-carousel/slick/slick-theme.css";
 
 // Component for each filter card at the top of the dashboard
 const StatCard = ({ imageSrc, title, value, change, bgColor, imgSize = 180 }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 1 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.3 }}
-    className="card flex flex-col justify-between rounded-xl p-4 text-white shadow-lg h-full mx-2"
-    style={{ background: bgColor }}
-  >
-    <div className="flex items-start justify-between">
-      <div>
-        <p className="text-white/s90 mb-1 text-3xl font-bold">{title}</p>
-        <p className="text-3xl font-bold text-white">{value}</p>
-      </div>
-      <span className="text-sm text-white/80">{change}</span>
-    </div>
-    <div className="mt-4 flex flex-col items-center">
-      <img
-        src={imageSrc}
-        alt={title}
-        className="rounded-full object-contain"
-        style={{ width: `${imgSize}px` }}
-      />
-    </div>
-  </motion.div>
+    // Animated card using framer-motion
+    <motion.div
+        initial={{ opacity: 0, y: 1 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="card mx-2 flex h-full flex-col justify-between rounded-xl p-4 text-white shadow-lg"
+        style={{ background: bgColor }}
+    >
+        <div className="flex items-start justify-between">
+            <div>
+                {/* Card title */}
+                <p className="text-white/s90 mb-1 text-3xl font-bold">{title}</p>
+                {/* Card value */}
+                <p className="text-3xl font-bold text-white">{value}</p>
+            </div>
+            {/* Change indicator */}
+            <span className="text-sm text-white/80">{change}</span>
+        </div>
+        <div className="mt-4 flex flex-col items-center">
+            {/* Card image */}
+            <img
+                src={imageSrc}
+                alt={title}
+                className="rounded-full object-contain"
+                style={{ width: `${imgSize}px` }}
+            />
+        </div>
+    </motion.div>
 );
 
+// Prop types for StatCard
 StatCard.propTypes = {
-  icon: PropTypes.elementType,
-  imageSrc: PropTypes.string,
-  title: PropTypes.string.isRequired,
-  value: PropTypes.string,
-  change: PropTypes.string,
-  bgColor: PropTypes.string.isRequired,
-  imgSize: PropTypes.number,
+    icon: PropTypes.elementType,
+    imageSrc: PropTypes.string,
+    title: PropTypes.string.isRequired,
+    value: PropTypes.string,
+    change: PropTypes.string,
+    bgColor: PropTypes.string.isRequired,
+    imgSize: PropTypes.number,
 };
 
-  const sliderSettings = {
+// Slider settings for filter cards
+const sliderSettings = {
     dots: true,
     infinite: true,
     autoplay: true,
@@ -56,32 +63,39 @@ StatCard.propTypes = {
     slidesToShow: 3,
     slidesToScroll: 1,
     responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
+        {
+            breakpoint: 1024,
+            settings: {
+                slidesToShow: 2,
+            },
         },
-      },
-      {
-        breakpoint: 640,
-        settings: {
-          slidesToShow: 1,
+        {
+            breakpoint: 640,
+            settings: {
+                slidesToShow: 1,
+            },
         },
-      },
     ],
-  };
+};
 
-// Main dashboard page
+// Main dashboard page component
 const DashboardPage = () => {
+    // Get current theme (light/dark)
     const { theme } = useTheme();
+    // State for bar chart data
     const [barData, setBarData] = useState([]);
+    // State for pie chart data
     const [pieData, setPieData] = useState([]);
+    // State for area chart data
     const [overviewData, setOverviewData] = useState([]);
+    // Loading state
     const [loading, setLoading] = useState(true);
+    // Chart color palette
     const COLORS = ["#4A90E2", "#AB47BC", "#FBC02D", "#E57373"];
 
-    // Fetch all data for the dashboard
+    // Fetch all data for the dashboard on mount
     useEffect(() => {
+        // Simulate loading and fetch data
         const loadWithDelay = async () => {
             const dataPromise = fetchRawData();
             const delayPromise = new Promise((resolve) => setTimeout(resolve, 1000));
@@ -97,6 +111,7 @@ const DashboardPage = () => {
         loadWithDelay();
     }, []);
 
+    // Show loader while fetching data
     if (loading) return <Loader message="Loading dashboard..." />;
 
     return (
@@ -104,16 +119,39 @@ const DashboardPage = () => {
             {/* Page title */}
             <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Dashboard</h1>
 
-            {/* Filter statistic cards */}
-            <Slider {...sliderSettings} className="px-2 mb-6">
-        <StatCard title="Filter 1" imageSrc="/filters/filter1.png" bgColor="bg-slate-100 dark:bg-slate-800" imgSize={250} />
-        <StatCard title="Filter 2" imageSrc="/filters/filter2.png" bgColor="bg-slate-100 dark:bg-slate-800" imgSize={250} />
-        <StatCard title="Filter 3" imageSrc="/filters/filter3.png" bgColor="bg-slate-100 dark:bg-slate-800" imgSize={250} />
-        <StatCard title="Filter 4" imageSrc="/filters/filter4.png" bgColor="bg-slate-100 dark:bg-slate-800" imgSize={250} />
-      </Slider>
+            {/* Filter statistic cards slider */}
+            <Slider
+                {...sliderSettings}
+                className="mb-6 px-2"
+            >
+                <StatCard
+                    title="Filter 1"
+                    imageSrc="/filters/filter1.png"
+                    bgColor="#6366f1"
+                    imgSize={250}
+                />
+                <StatCard
+                    title="Filter 2"
+                    imageSrc="/filters/filter2.png"
+                    bgColor="#6366f1"
+                    imgSize={250}
+                />
+                <StatCard
+                    title="Filter 3"
+                    imageSrc="/filters/filter3.png"
+                    bgColor="#6366f1"
+                    imgSize={250}
+                />
+                <StatCard
+                    title="Filter 4"
+                    imageSrc="/filters/filter4.png"
+                    bgColor="#6366f1"
+                    imgSize={250}
+                />
+            </Slider>
 
             {/* Pie and Bar Charts */}
-            <div className="grid grid-cols-1 gap-4 text-slate-900 dark:text-white md:grid-cols-2 lg:grid-cols-7 px-2">
+            <div className="grid grid-cols-1 gap-4 px-2 text-slate-900 dark:text-white md:grid-cols-2 lg:grid-cols-7">
                 {/* Pie Chart */}
                 <motion.div
                     initial={{ opacity: 0, y: 10 }}
@@ -150,6 +188,7 @@ const DashboardPage = () => {
                                 label
                                 stroke="none"
                             >
+                                {/* Color each pie slice */}
                                 {pieData.map((entry, index) => (
                                     <Cell
                                         key={`cell-${index}`}
@@ -209,6 +248,7 @@ const DashboardPage = () => {
                                 verticalAlign="top"
                                 align="right"
                             />
+                            {/* Bar segments for each demographic */}
                             <Bar
                                 dataKey="Over25M"
                                 stackId="a"
@@ -247,6 +287,7 @@ const DashboardPage = () => {
                     width="100%"
                     height={300}
                 >
+                    {/* Custom legend for area chart */}
                     <div className="flex gap-6 text-sm font-medium">
                         <div className="flex items-center gap-2">
                             <div
@@ -254,6 +295,7 @@ const DashboardPage = () => {
                                 style={{ backgroundColor: "#6366f1" }}
                             ></div>
                             <span>Interacted</span>
+                            {/* Total interacted count */}
                             <span className="font-bold text-green-600">{overviewData.reduce((sum, d) => sum + d.Interacted, 0)}</span>
                         </div>
                         <div className="flex items-center gap-2">
@@ -262,6 +304,7 @@ const DashboardPage = () => {
                                 style={{ backgroundColor: "#10b981" }}
                             ></div>
                             <span>Not Interacted</span>
+                            {/* Total not interacted count */}
                             <span className="font-bold text-red-600">{overviewData.reduce((sum, d) => sum + d.NotInteracted, 0)}</span>
                         </div>
                     </div>
@@ -272,6 +315,7 @@ const DashboardPage = () => {
                             stroke={theme === "light" ? "#e2e8f0" : "#334155"}
                         />
                         <defs>
+                            {/* Gradient for Interacted area */}
                             <linearGradient
                                 id="colorInteracted"
                                 x1="0"
@@ -290,6 +334,7 @@ const DashboardPage = () => {
                                     stopOpacity={0}
                                 />
                             </linearGradient>
+                            {/* Gradient for Not Interacted area */}
                             <linearGradient
                                 id="colorNot"
                                 x1="0"
@@ -320,12 +365,14 @@ const DashboardPage = () => {
                             axisLine={false}
                         />
                         <Tooltip />
+                        {/* Area for Interacted users */}
                         <Area
                             type="monotone"
                             dataKey="Interacted"
                             stroke="#6366f1"
                             fill="url(#colorInteracted)"
                         />
+                        {/* Area for Not Interacted users */}
                         <Area
                             type="monotone"
                             dataKey="NotInteracted"
