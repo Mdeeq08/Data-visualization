@@ -35,7 +35,18 @@ or using GitHub:
 Install the project dependencies using npm:
 
 ```bash
+npm install 
+```
+
+```Necessary packages you need to install 
 npm install
+ react react-dom 
+ recharts 
+ framer-motion 
+ react-slick slick-carousel 
+ prop-types
+ jspdf jspdf-autotable 
+ lucide-react
 ```
 
 **\*\*_Ensure you have installed [NodeJS](https://nodejs.org/en) on your machine._**
@@ -45,5 +56,12 @@ npm install
 ```bash
 npm start
 ```
+
+
+####  Website content 
+
+![Dashboard Screenshot](./public//filters/Dashboard2.png)
+![Dashboard Screenshot](./public/filters/dashboard3.png)
+
 
 **\*\*_This project uses [Vite](https://vitejs.dev)._**
